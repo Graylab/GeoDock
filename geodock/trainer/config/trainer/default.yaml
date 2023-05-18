@@ -1,0 +1,9 @@
+_target_: pytorch_lightning.Trainer
+
+accelerator: auto
+min_epochs: 1
+max_epochs: 10
+num_sanity_val_steps: 1
+gradient_clip_val: 0.1
+check_val_every_n_epoch: 1
+

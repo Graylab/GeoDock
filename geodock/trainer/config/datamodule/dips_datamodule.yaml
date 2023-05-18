@@ -1,0 +1,9 @@
+_target_: rigid_docking.datasets.dips_datamodule.DipsDataModule
+
+data_dir: /home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips/pt_files
+train_list: /home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/train_list_rev.txt
+val_list: /home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/val_list_rev.txt
+test_list: /home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/test_list.txt
+batch_size: 1
+num_workers: 6
+pin_memory: True
