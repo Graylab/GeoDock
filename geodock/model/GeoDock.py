@@ -109,13 +109,13 @@ class GeoDock(pl.LightningModule):
         violatoin_loss = losses['violation_loss']
 
         if self.current_epoch < 5:
-            cum_loss = intra_loss + 0.3*dist_loss + 0.01*lddt_loss 
+            loss = intra_loss + 0.3*dist_loss + 0.01*lddt_loss 
         elif self.current_epoch < 10:
-            cum_loss = intra_loss + inter_loss + 0.3*dist_loss + 0.01*lddt_loss
+            loss = intra_loss + inter_loss + 0.3*dist_loss + 0.01*lddt_loss
         else:
-            cum_loss = intra_loss + inter_loss + violation_loss + 0.3*dist_loss + 0.01*lddt_loss
+            loss = intra_loss + inter_loss + violation_loss + 0.3*dist_loss + 0.01*lddt_loss
 
-        losses.update({'cum_loss': cum_loss})
+        losses.update({'loss': loss})
 
         return losses
 
@@ -139,13 +139,13 @@ class GeoDock(pl.LightningModule):
         losses = self.step(batch, batch_idx)
         self._log(losses, train=True)
         
-        return losses['cum_loss']
+        return losses['loss']
 
     def validation_step(self, batch, batch_idx):
         losses = self.step(batch, batch_idx)
         self._log(losses, train=False)
         
-        return losses['cum_loss']
+        return losses['loss']
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(

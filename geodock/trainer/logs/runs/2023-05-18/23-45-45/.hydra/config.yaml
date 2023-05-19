@@ -1,0 +1,57 @@
+work_dir: ${hydra:runtime.cwd}
+data_dir: ${work_dir}/data
+print_config: true
+ignore_warnings: true
+test_after_training: false
+seed: 0
+name: null
+trainer:
+  _target_: pytorch_lightning.Trainer
+  accelerator: auto
+  min_epochs: 1
+  max_epochs: 30
+  num_sanity_val_steps: 1
+  gradient_clip_val: 0.1
+  check_val_every_n_epoch: 1
+model:
+  _target_: geodock.model.GeoDock.GeoDock
+  node_dim: 128
+  edge_dim: 64
+  gm_depth: 3
+  sm_depth: 3
+  num_iter: 4
+  lr: 5.0e-05
+  weight_decay: 0.0
+datamodule:
+  _target_: geodock.datasets.geodock_datamodule.GeoDockDataModule
+  train_set: dips_train_500
+  val_set: dips_val_500
+  test_set: dips_test_500
+  batch_size: 1
+  num_workers: 6
+  pin_memory: true
+callbacks:
+  model_checkpoint:
+    _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    monitor: val/loss
+    mode: min
+    save_top_k: -1
+    save_last: false
+    verbose: false
+    dirpath: checkpoints/
+    filename: epoch_{epoch:03d}
+    auto_insert_metric_name: false
+logger:
+  wandb:
+    _target_: pytorch_lightning.loggers.wandb.WandbLogger
+    project: geodock
+    name: ${name}
+    save_dir: .
+    offline: false
+    id: null
+    log_model: false
+    prefix: ''
+    job_type: train
+    group: ''
+    tags: []
+default_mode: true

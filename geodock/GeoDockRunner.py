@@ -11,15 +11,17 @@ class GeoDockRunner():
     """
     Wrapper for GeoDock model predictions.
     """
-    def __init__(self):
+    def __init__(self, ckpt_file):
+        # check if gpu is available
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         # Load ESM-2 model
         self.esm_model, alphabet = esm.pretrained.esm2_t33_650M_UR50D()
         self.batch_converter = alphabet.get_batch_converter()
-        self.esm_model.eval()  # disables dropout for deterministic results
+        self.esm_model.eval().to(self.device)  # disables dropout for deterministic results
 
         # Load GeoDock model
-        self.model = GeoDock().eval()
+        self.model = GeoDock().load_from_checkpoint(ckpt_file).eval().to(self.device)
 
     def embed(
         self, 
@@ -36,6 +38,7 @@ class GeoDockRunner():
             coords2,
             self.esm_model,
             self.batch_converter,
+            self.device,
         )
 
         print(f"Completed embedding in {time() - start_time:.2f} seconds.")
@@ -70,10 +73,11 @@ class GeoDockRunner():
 
 
 if __name__ == '__main__':
-    partner1="/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a9x.pdb4_0.dill_r_b_COMPLEX.pdb"
-    partner2="/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a9x.pdb4_0.dill_l_b_COMPLEX.pdb"
+    ckpt_file = "weights/best.ckpt"
+    partner1="/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a95.pdb1_3.dill_r_b_COMPLEX.pdb"
+    partner2="/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a95.pdb1_3.dill_l_b_COMPLEX.pdb"
 
-    geodock = GeoDockRunner()
+    geodock = GeoDockRunner(ckpt_file=ckpt_file)
     pred = geodock.dock(
         partner1, 
         partner2,

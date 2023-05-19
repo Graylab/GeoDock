@@ -1,0 +1,23 @@
+{
+    "os": "Linux-4.18.0-147.el8.x86_64-x86_64-with-centos-8.1.1911-Core",
+    "python": "3.7.10",
+    "heartbeatAt": "2023-05-19T01:34:01.144698",
+    "startedAt": "2023-05-19T01:34:00.715419",
+    "docker": null,
+    "gpu": "A100-PCIE-40GB",
+    "gpu_count": 1,
+    "cpu_count": 48,
+    "cuda": null,
+    "args": null,
+    "state": "running",
+    "program": "run.py",
+    "git": {
+        "remote": "https://github.com/Graylab/GeoDock.git",
+        "commit": "122abfd8ee51dcb070542bd5e5b20bee80c35f42"
+    },
+    "email": "lchu11@jhu.edu",
+    "root": "/scratch4/jgray21/lchu11/GeoDock",
+    "host": "gpu07",
+    "username": "lchu11",
+    "executable": "/home/lchu11/.local/share/virtualenvs/Docking-dev-8PTv0Cry/bin/python"
+}
