@@ -12,22 +12,21 @@ def embed(
     coords2,
     model,
     batch_converter,
-    device,
 ):
     assert len(seq1) == coords1.size(0) and len(seq2) == coords2.size(0)
 
     # Get esm embeddings
-    protein1_embeddings = get_esm_rep(seq1, model, batch_converter, device)
-    protein2_embeddings = get_esm_rep(seq2, model, batch_converter, device)
+    protein1_embeddings = get_esm_rep(seq1, model, batch_converter)
+    protein2_embeddings = get_esm_rep(seq2, model, batch_converter)
 
     # Get pair embeddings
     coords = torch.cat([coords1, coords2], dim=0)
     input_pairs = get_pair_mats(coords, len(seq1))
     input_contact = torch.zeros(*input_pairs.shape[:-1])[..., None] 
-    pair_embeddings = torch.cat([input_pairs, input_contact], dim=-1).to(device)
+    pair_embeddings = torch.cat([input_pairs, input_contact], dim=-1)
     
     # Get positional embeddings
-    positional_embeddings = get_pair_relpos(len(seq1), len(seq2)).to(device)
+    positional_embeddings = get_pair_relpos(len(seq1), len(seq2))
 
     embeddings = GeoDockInput(
         protein1_embeddings=protein1_embeddings.unsqueeze(0),
@@ -38,7 +37,7 @@ def embed(
 
     return embeddings
     
-def get_esm_rep(seq_prim, model, batch_converter, device):
+def get_esm_rep(seq_prim, model, batch_converter):
     # Use ESM-1b format.
     # The length of tokens is:
     # L (sequence length) + 2 (start and end tokens)
@@ -47,7 +46,7 @@ def get_esm_rep(seq_prim, model, batch_converter, device):
     ]
     out = batch_converter(seq)
     with torch.no_grad():
-        results = model(out[-1].to(device), repr_layers = [33])
+        results = model(out[-1], repr_layers = [33])
         rep = results["representations"][33]
     
     return rep[0, 1:-1, :]
