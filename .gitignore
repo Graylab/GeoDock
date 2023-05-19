@@ -163,7 +163,5 @@ cython_debug/
 *.png
 *.pdb
 *.ckpt
-<<<<<<< HEAD
 *.json
-=======
->>>>>>> 0bab3e666ac59e2bbd5679d173f0e04d6e30e0d0
+geodock/trainer/logs/
