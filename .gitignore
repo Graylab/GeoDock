@@ -164,4 +164,6 @@ cython_debug/
 *.pdb
 *.ckpt
 *.json
+*.out
+*.sh
 geodock/trainer/logs/
