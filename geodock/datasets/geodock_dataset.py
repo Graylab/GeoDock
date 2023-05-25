@@ -4,6 +4,7 @@ import random
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from torch.utils import data
+from tqdm import tqdm
 from einops import repeat
 from geodock.utils.pdb import save_PDB, place_fourth_atom 
 from geodock.utils.coords6d import get_coords6d
@@ -27,6 +28,20 @@ class GeoDockDataset(data.Dataset):
         self.prob = prob
         self.count = count
         self.use_Cb = use_Cb
+
+        if dataset == 'dips_train':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips/pt_files"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/train_list_lt_50.txt" 
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
+        if dataset == 'dips_val':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips/pt_files"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/val_list_lt_50.txt" 
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
 
         if dataset == 'dips_train_500':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips/pt_files"
@@ -57,8 +72,24 @@ class GeoDockDataset(data.Dataset):
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_test_bound"
             self.file_list = [i for i in os.listdir(self.data_dir)] 
 
+        elif dataset == 'db5_train_bound':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_train_bound"
+            self.file_list = [i for i in os.listdir(self.data_dir)] 
+
+        elif dataset == 'db5_val_bound':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_val_bound"
+            self.file_list = [i for i in os.listdir(self.data_dir)] 
+
         elif dataset == 'db5_test_unbound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_test_unbound"
+            self.file_list = [i for i in os.listdir(self.data_dir)] 
+
+        elif dataset == 'db5_train_unbound':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_train_unbound"
+            self.file_list = [i for i in os.listdir(self.data_dir)] 
+
+        elif dataset == 'db5_val_unbound':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_val_unbound"
             self.file_list = [i for i in os.listdir(self.data_dir)] 
 
         elif dataset == 'db5_bound':
@@ -71,7 +102,7 @@ class GeoDockDataset(data.Dataset):
 
 
     def __getitem__(self, idx: int):
-        if self.dataset == 'dips_train_500' or self.dataset == 'dips_val_500' or self.dataset == 'dips_test_500':
+        if self.dataset == 'dips_train' or self.dataset == 'dips_val' or self.dataset == 'dips_train_500' or self.dataset == 'dips_val_500' or self.dataset == 'dips_test_500':
             # Get info from file_list 
             _id = self.file_list[idx]
             split_string = _id.split('/')
@@ -89,6 +120,59 @@ class GeoDockDataset(data.Dataset):
         seq2 = data['ligand'].seq
         coords2 = data['ligand'].pos
         protein2_embeddings = data['ligand'].x
+
+        # crop > 500
+        if self.is_training:
+            crop_size = 500
+            if len(seq1) + len(seq2) > crop_size:
+                crop_size_per_chain = crop_size // 2
+                if len(seq1) > len(seq2):
+                    if len(seq2) < crop_size_per_chain:
+                        crop_len = crop_size - len(seq2)
+                        n = random.randint(0, len(seq1)-crop_len)
+                        seq1 = seq1[n:n+crop_len]
+                        coords1 = coords1[n:n+crop_len]
+                        protein1_embeddings = protein1_embeddings[n:n+crop_len]
+                    else:
+                        n1 = random.randint(0, len(seq1)-crop_size_per_chain)
+                        seq1 = seq1[n1:n1+crop_size_per_chain]
+                        coords1 = coords1[n1:n1+crop_size_per_chain]
+                        protein1_embeddings = protein1_embeddings[n1:n1+crop_size_per_chain]
+                        n2 = random.randint(0, len(seq2)-crop_size_per_chain)
+                        seq2 = seq2[n2:n2+crop_size_per_chain]
+                        coords2 = coords2[n2:n2+crop_size_per_chain]
+                        protein2_embeddings = protein2_embeddings[n2:n2+crop_size_per_chain]
+
+                elif len(seq2) > len(seq1):
+                    if len(seq1) < crop_size_per_chain:
+                        crop_len = crop_size - len(seq1)
+                        n = random.randint(0, len(seq2)-crop_len)
+                        seq2 = seq2[n:n+crop_len]
+                        coords2 = coords2[n:n+crop_len]
+                        protein2_embeddings = protein2_embeddings[n:n+crop_len]
+                    else:
+                        n1 = random.randint(0, len(seq1)-crop_size_per_chain)
+                        seq1 = seq1[n1:n1+crop_size_per_chain]
+                        coords1 = coords1[n1:n1+crop_size_per_chain]
+                        protein1_embeddings = protein1_embeddings[n1:n1+crop_size_per_chain]
+                        n2 = random.randint(0, len(seq2)-crop_size_per_chain)
+                        seq2 = seq2[n2:n2+crop_size_per_chain]
+                        coords2 = coords2[n2:n2+crop_size_per_chain]
+                        protein2_embeddings = protein2_embeddings[n2:n2+crop_size_per_chain]
+                else:
+                    n = random.randint(0, len(seq1)-crop_size_per_chain)
+                    seq1 = seq1[n:n+crop_size_per_chain]
+                    coords1 = coords1[n:n+crop_size_per_chain]
+                    protein1_embeddings = protein1_embeddings[n:n+crop_size_per_chain]
+                    seq2 = seq2[n:n+crop_size_per_chain]
+                    coords2 = coords2[n:n+crop_size_per_chain]
+                    protein2_embeddings = protein2_embeddings[n:n+crop_size_per_chain]
+
+        try:
+            assert len(seq1) == coords1.size(0) == protein1_embeddings.size(0)
+            assert len(seq2) == coords2.size(0) == protein2_embeddings.size(0) 
+        except:
+            print(_id)
         
         # Get ground truth
         label_coords = torch.cat([coords1, coords2], dim=0)
@@ -108,6 +192,12 @@ class GeoDockDataset(data.Dataset):
 
         # Pair positional embedding
         positional_embeddings = self.get_pair_relpos(len(seq1), len(seq2))
+
+        try:
+            assert positional_embeddings.size(0) == pair_embeddings.size(0)
+            assert positional_embeddings.size(1) == pair_embeddings.size(1)
+        except:
+            print(_id)
 
         if self.out_pdb:
             print(_id)
@@ -363,10 +453,15 @@ class GeoDockDataset(data.Dataset):
 
 if __name__ == '__main__':
     dataset = GeoDockDataset(
-        dataset='dips_val_500',
-        out_pdb=True,
-        out_png=True,
-        is_training=False,
+        dataset='dips_val',
+        out_pdb=False,
+        out_png=False,
+        is_training=True,
         count=0,
     )
-    dataset[100]
+
+    dataloader = data.DataLoader(dataset, batch_size=1, num_workers=6)
+
+    for batch in tqdm(dataloader):
+        pass
+    

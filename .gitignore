@@ -167,3 +167,4 @@ cython_debug/
 *.out
 *.sh
 geodock/trainer/logs/
+benchmark/

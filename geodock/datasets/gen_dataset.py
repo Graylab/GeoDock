@@ -33,6 +33,16 @@ class GeoDockDataset(data.Dataset):
             self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
             self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
 
+        elif dataset == 'db5_train_bound' or dataset == 'db5_train_unbound':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/bm5.5/train"
+            self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
+            self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
+
+        elif dataset == 'db5_val_bound' or dataset == 'db5_val_unbound':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/bm5.5/val"
+            self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
+            self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
+
         elif dataset == 'db5_bound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/bm5.5/structures"
             self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
@@ -69,7 +79,7 @@ class GeoDockDataset(data.Dataset):
             coords1 = torch.nan_to_num(torch.from_numpy(coords1))
             coords2 = torch.nan_to_num(torch.from_numpy(coords2))
         
-        elif self.dataset == 'db5_test_bound':
+        elif self.dataset == 'db5_test_bound' or self.dataset == 'db5_train_bound' or self.dataset == 'db5_val_bound':
             # Get info from file_list
             _id = self.file_list[idx] 
             pdb_file_1 = os.path.join(self.data_dir, _id+"_r_b.pdb")
@@ -79,7 +89,7 @@ class GeoDockDataset(data.Dataset):
             coords1 = torch.nan_to_num(torch.from_numpy(coords1))
             coords2 = torch.nan_to_num(torch.from_numpy(coords2))
 
-        elif self.dataset == 'db5_test_unbound':
+        elif self.dataset == 'db5_test_unbound' or self.dataset == 'db5_train_unbound' or self.dataset == 'db5_val_unbound':
             # Get info from file_list
             _id = self.file_list[idx] 
             pdb_file_1 = os.path.join(self.data_dir, _id+"_r_u.pdb")
@@ -192,7 +202,7 @@ class GeoDockDataset(data.Dataset):
 
 
 if __name__ == '__main__':
-    name = 'db5_test_unbound'
+    name = 'db5_val_bound'
     save_dir = '/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/'+name 
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
