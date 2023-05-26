@@ -5,6 +5,7 @@ from geodock.utils.pdb import save_PDB, place_fourth_atom
 
 
 def dock(
+    out_name,
     seq1, 
     seq2,
     model_in,
@@ -30,7 +31,7 @@ def dock(
         os.makedirs(out_dir)
 
     #get pdb
-    out_pdb =  os.path.join(out_dir, 'test.pdb')
+    out_pdb =  os.path.join(out_dir, f"{out_name}.pdb")
 
     if os.path.exists(out_pdb):
         os.remove(out_pdb)

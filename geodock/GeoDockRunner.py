@@ -46,7 +46,7 @@ class GeoDockRunner():
 
         return embeddings
     
-    def dock(self, partner1, partner2):
+    def dock(self, partner1, partner2, out_name):
         # Get seqs and coords
         coords1, seq1 = load_coords(partner1, chain=None)
         coords2, seq2 = load_coords(partner2, chain=None)
@@ -64,6 +64,7 @@ class GeoDockRunner():
         # Start docking
         start_time = time()
         dock(
+            out_name,
             seq1,
             seq2,
             model_in,
@@ -74,12 +75,14 @@ class GeoDockRunner():
 
 
 if __name__ == '__main__':
-    ckpt_file = "weights/best.ckpt"
+    ckpt_file = "weights/model0.ckpt"
     partner1 = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a95.pdb1_3.dill_r_b_COMPLEX.pdb"
     partner2 = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a95.pdb1_3.dill_l_b_COMPLEX.pdb"
+    out_name = "test"
 
     geodock = GeoDockRunner(ckpt_file=ckpt_file)
     pred = geodock.dock(
-        partner1, 
-        partner2,
+        partner1=partner1, 
+        partner2=partner2,
+        out_name=out_name,
     )
