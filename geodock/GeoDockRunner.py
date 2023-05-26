@@ -22,7 +22,7 @@ class GeoDockRunner():
         self.esm_model.eval().to(self.device)  # disables dropout for deterministic results
 
         # Load GeoDock model
-        self.model = GeoDock.load_from_checkpoint(ckpt_file).eval().to(self.device)
+        self.model = GeoDock.load_from_checkpoint(ckpt_file, map_location=self.device).eval().to(self.device)
 
     def embed(
         self, 
