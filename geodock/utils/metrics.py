@@ -14,7 +14,7 @@ def compute_metrics(model, native):
     l_rmsd = get_l_rmsd(model_rec, model_lig, native_rec, native_lig)
     fnat = get_fnat(model_rec, model_lig, native_rec, native_lig)
     DockQ = get_DockQ(i_rmsd, l_rmsd, fnat)
-    return {'c_rmsd': c_rmsd, 'i_rmsd': i_rmsd, 'l_rmsd': l_rmsd, 'fnat': fnat, 'DockQ': DockQ}
+    return {'cRMS': c_rmsd, 'iRMS': i_rmsd, 'LRMS': l_rmsd, 'Fnat': fnat, 'DockQ': DockQ}
     
 def get_interface_res(x1, x2, cutoff=10.0):
     # Calculate pairwise distances
@@ -23,7 +23,7 @@ def get_interface_res(x1, x2, cutoff=10.0):
 
     # Find minimum distance between each pair of residues
     min_dist, _ = torch.min(dist, dim=-1)
-   
+
     # Find index < cutoff 
     index = torch.where(min_dist < cutoff)
     res1 = torch.unique(index[0])

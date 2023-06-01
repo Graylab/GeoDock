@@ -75,10 +75,16 @@ class GeoDockRunner():
 
 
 if __name__ == '__main__':
-    ckpt_file = "weights/model0.ckpt"
+    ckpt_file = "weights/best.ckpt"
     partner1 = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a95.pdb1_3.dill_r_b_COMPLEX.pdb"
     partner2 = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a95.pdb1_3.dill_l_b_COMPLEX.pdb"
     out_name = "test"
+
+    # Record the initial memory usage
+    torch.cuda.reset_peak_memory_stats()
+
+    # Perform your computations
+
 
     geodock = GeoDockRunner(ckpt_file=ckpt_file)
     pred = geodock.dock(
@@ -86,3 +92,9 @@ if __name__ == '__main__':
         partner2=partner2,
         out_name=out_name,
     )
+
+    # Check the peak memory usage
+    peak_memory_bytes = torch.cuda.max_memory_allocated()
+    peak_memory_mb = peak_memory_bytes / 1024 / 1024  # Convert to megabytes
+
+    print(f"Peak memory usage: {peak_memory_mb:.2f} MB")

@@ -167,3 +167,4 @@ cython_debug/
 geodock/trainer/logs/
 benchmark/
 deploy_keys/
+*.csv

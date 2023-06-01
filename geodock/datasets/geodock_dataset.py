@@ -301,6 +301,10 @@ class GeoDockDataset(data.Dataset):
             # shuffle the indices
             shuffled_indices = torch.randperm(true_indices.shape[0])
 
+            # make sure count <= # of true indices
+            if count > true_indices.shape[0]:
+                count = true_indices.shape[0]
+
             # pick the first shuffled index
             selected_indices = true_indices[shuffled_indices[:count]]
 
@@ -457,11 +461,15 @@ if __name__ == '__main__':
         out_pdb=False,
         out_png=False,
         is_training=True,
-        count=0,
+        count=3,
     )
 
+    dataset[0]
+
+    """
     dataloader = data.DataLoader(dataset, batch_size=1, num_workers=6)
 
     for batch in tqdm(dataloader):
         pass
+    """
     
