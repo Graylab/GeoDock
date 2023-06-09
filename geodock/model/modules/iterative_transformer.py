@@ -1,3 +1,7 @@
+###
+#   Inspired by FoldingTrunk implementation from https://github.com/facebookresearch/esm/blob/main/esm/esmfold/v1/trunk.py
+###
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

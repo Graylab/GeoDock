@@ -1,3 +1,7 @@
+###
+#   Modified from triangle multiplicative update implementation from https://github.com/lucidrains/triangle-multiplicative-module
+###
+
 import torch
 import torch.nn as nn
 from torch import einsum

@@ -1,10 +1,14 @@
+###
+#   Modified from IPA implementation from https://github.com/lucidrains/invariant-point-attention
+###
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from einops.layers.torch import Rearrange
 from einops import rearrange, repeat
 from torch import einsum
-from pytorch3d.transforms import matrix_to_quaternion, quaternion_multiply, quaternion_to_matrix, rotation_6d_to_matrix
+from pytorch3d.transforms import quaternion_to_matrix
 
 
 # Helpers
