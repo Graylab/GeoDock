@@ -22,52 +22,44 @@ class GeoDockDataset(data.Dataset):
         save_dir: str,
         dataset: str = 'dips_test',
         out_pdb: bool = False,
+        device: str = 'cpu',
     ):
         if dataset == 'dips_test':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock"
             self.file_list = [i[:-21] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
             self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
 
-        elif dataset == 'db5_test_bound' or dataset == 'db5_test_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/bm5.5/test"
-            self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
-            self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
-
-        elif dataset == 'db5_train_bound' or dataset == 'db5_train_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/bm5.5/train"
-            self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
-            self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
-
-        elif dataset == 'db5_val_bound' or dataset == 'db5_val_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/bm5.5/val"
-            self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
-            self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
-
         elif dataset == 'db5_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/bm5.5/structures"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/structures"
             self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
             self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
 
         elif dataset == 'db5_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/bm5.5/structures"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/structures"
             self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
             self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
         
+        elif dataset == 'db5_unbound_flexible':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/AF_RepD2_set/flexible_targets/unbound"
+            self.partner_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/AF_RepD2_set/flexible_targets/partners"
+            self.file_list = [i[:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb']
+
         elif dataset == 'abag_test':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/exp_aa/cleaned/"
             pdb_list = pd.read_csv("/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/exp_aa/pdb_list.csv")
             self.file_list = pdb_list['pdb_id'].to_list()
             self.partner1 = pdb_list['partner1'].to_list()
             self.partner2 = pdb_list['partner2'].to_list()
-   
+        
         self.dataset = dataset
         self.save_dir = save_dir 
         self.out_pdb = out_pdb
+        self.device = device
 
         # Load esm
         esm_model, alphabet = esm.pretrained.load_model_and_alphabet('/home/lchu11/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt')
         self.batch_converter = alphabet.get_batch_converter()
-        self.esm_model = esm_model.cuda().eval()
+        self.esm_model = esm_model.to(device).eval()
 
     def __getitem__(self, idx: int):
         if self.dataset == 'dips_test':
@@ -79,26 +71,6 @@ class GeoDockDataset(data.Dataset):
             coords1 = torch.nan_to_num(torch.from_numpy(coords1))
             coords2 = torch.nan_to_num(torch.from_numpy(coords2))
         
-        elif self.dataset == 'db5_test_bound' or self.dataset == 'db5_train_bound' or self.dataset == 'db5_val_bound':
-            # Get info from file_list
-            _id = self.file_list[idx] 
-            pdb_file_1 = os.path.join(self.data_dir, _id+"_r_b.pdb")
-            pdb_file_2 = os.path.join(self.data_dir, _id+"_l_b.pdb")
-            coords1, seq1 = load_coords(pdb_file_1, chain=None)
-            coords2, seq2 = load_coords(pdb_file_2, chain=None)
-            coords1 = torch.nan_to_num(torch.from_numpy(coords1))
-            coords2 = torch.nan_to_num(torch.from_numpy(coords2))
-
-        elif self.dataset == 'db5_test_unbound' or self.dataset == 'db5_train_unbound' or self.dataset == 'db5_val_unbound':
-            # Get info from file_list
-            _id = self.file_list[idx] 
-            pdb_file_1 = os.path.join(self.data_dir, _id+"_r_u.pdb")
-            pdb_file_2 = os.path.join(self.data_dir, _id+"_l_u.pdb")
-            coords1, seq1 = load_coords(pdb_file_1, chain=None)
-            coords2, seq2 = load_coords(pdb_file_2, chain=None)
-            coords1 = torch.nan_to_num(torch.from_numpy(coords1))
-            coords2 = torch.nan_to_num(torch.from_numpy(coords2))
-            
         elif self.dataset == 'db5_bound':
             # Get info from file_list
             _id = self.file_list[idx] 
@@ -108,7 +80,6 @@ class GeoDockDataset(data.Dataset):
             coords2, seq2 = load_coords(pdb_file_2, chain=None)
             coords1 = torch.nan_to_num(torch.from_numpy(coords1))
             coords2 = torch.nan_to_num(torch.from_numpy(coords2))
-            _id += '_b'
 
         elif self.dataset == 'db5_unbound':
             # Get info from file_list
@@ -119,7 +90,23 @@ class GeoDockDataset(data.Dataset):
             coords2, seq2 = load_coords(pdb_file_2, chain=None)
             coords1 = torch.nan_to_num(torch.from_numpy(coords1))
             coords2 = torch.nan_to_num(torch.from_numpy(coords2))
-            _id += '_u'
+
+        elif self.dataset == 'db5_unbound_flexible':
+            _id = self.file_list[idx] 
+            print(_id)
+            model_file = os.path.join(self.data_dir, _id+"_unbound.pdb")
+            partner_file = os.path.join(self.partner_dir, _id+"_partners") 
+
+            with open(partner_file, 'r') as f:
+                partner = f.readline().strip().split()[1]
+                model_partner1 = partner.split('_')[0]
+                model_partner2 = partner.split('_')[1]
+                
+            coords1, seq1 = load_coords(model_file, chain=[*model_partner1])
+            coords2, seq2 = load_coords(model_file, chain=[*model_partner2])
+
+            coords1 = torch.nan_to_num(torch.from_numpy(coords1))
+            coords2 = torch.nan_to_num(torch.from_numpy(coords2))
 
         elif self.dataset == 'abag_test':
             # Get info from file_list
@@ -140,7 +127,7 @@ class GeoDockDataset(data.Dataset):
             coords1 = self.get_full_coords(coords1)
             coords2 = self.get_full_coords(coords2)
             test_coords = torch.cat([coords1, coords2], dim=0)
-            save_PDB('test.pdb', test_coords, seq1+seq2, len(seq1)-1)
+            save_PDB(out_pdb='test.pdb', coords=test_coords, seq=seq1+seq2, delim=len(seq1)-1)
 
         # save data to a hetero graph 
         data = HeteroData()
@@ -168,7 +155,7 @@ class GeoDockDataset(data.Dataset):
         ]
         out = self.batch_converter(seq)
         with torch.no_grad():
-            results = self.esm_model(out[-1].cuda(), repr_layers = [33])
+            results = self.esm_model(out[-1].to(self.device), repr_layers = [33])
             rep = results["representations"][33].cpu()
         
         return rep[0, 1:-1, :]
@@ -202,7 +189,7 @@ class GeoDockDataset(data.Dataset):
 
 
 if __name__ == '__main__':
-    name = 'db5_val_bound'
+    name = 'db5_unbound_flexible'
     save_dir = '/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/'+name 
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
@@ -216,10 +203,7 @@ if __name__ == '__main__':
         out_pdb=False,
     )
 
-    subset_indices = [0]
-    subset = data.Subset(dataset, subset_indices)
     dataloader = data.DataLoader(dataset, batch_size=1)
 
     for batch in tqdm(dataloader):
         pass
-

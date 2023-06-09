@@ -11,6 +11,7 @@ class GeoDockDataModule(pl.LightningDataModule):
         val_set: str,
         test_set: str,
         batch_size: int = 1,
+        is_training: bool = True,
         **kwargs
     ):
         super().__init__()
@@ -18,6 +19,7 @@ class GeoDockDataModule(pl.LightningDataModule):
         self.val_set = val_set
         self.test_set = test_set
         self.batch_size = batch_size
+        self.is_training = is_training
         self.num_workers = kwargs['num_workers']
         self.pin_memory = kwargs['pin_memory']
 
@@ -31,12 +33,15 @@ class GeoDockDataModule(pl.LightningDataModule):
     def setup(self, stage: Optional[str] = None):
         self.data_train = GeoDockDataset(
             dataset=self.train_set,
+            is_training=self.is_training,
         )
         self.data_val = GeoDockDataset(
             dataset=self.val_set,
+            is_training=self.is_training,
         )
         self.data_test = GeoDockDataset(
             dataset=self.test_set,
+            is_training=self.is_training,
         )
 
     def train_dataloader(self):

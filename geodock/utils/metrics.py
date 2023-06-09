@@ -14,7 +14,9 @@ def compute_metrics(model, native):
     l_rmsd = get_l_rmsd(model_rec, model_lig, native_rec, native_lig)
     fnat = get_fnat(model_rec, model_lig, native_rec, native_lig)
     DockQ = get_DockQ(i_rmsd, l_rmsd, fnat)
-    return {'cRMS': c_rmsd, 'iRMS': i_rmsd, 'LRMS': l_rmsd, 'Fnat': fnat, 'DockQ': DockQ}
+    rec_bb_rmsd = get_bb_rmsd(model_rec, native_rec)
+    lig_bb_rmsd = get_bb_rmsd(model_lig, native_lig)
+    return {'cRMS': c_rmsd, 'iRMS': i_rmsd, 'LRMS': l_rmsd, 'Fnat': fnat, 'DockQ': DockQ, 'Rec_BB_RMS': rec_bb_rmsd, 'Lig_BB_RMS': lig_bb_rmsd}
     
 def get_interface_res(x1, x2, cutoff=10.0):
     # Calculate pairwise distances
@@ -53,6 +55,13 @@ def get_l_rmsd(model_rec, model_lig, native_rec, native_lig):
     R, t = find_rigid_alignment(model_rec, native_rec)
     model_lig = (R.mm(model_lig.T)).T + t
     return get_rmsd(model_lig, native_lig).item()
+
+def get_bb_rmsd(model, native):
+    pred = model.flatten(end_dim=1)
+    label = native.flatten(end_dim=1)
+    R, t = find_rigid_alignment(pred, label)
+    pred = (R.mm(pred.T)).T + t
+    return get_rmsd(pred, label).item()
 
 def get_fnat(model_rec, model_lig, native_rec, native_lig):
     native_res1, native_res2 = get_interface_res(native_rec, native_lig, cutoff=6.0)

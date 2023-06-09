@@ -17,6 +17,7 @@ class GeoDockDataset(data.Dataset):
         out_pdb: bool = False,
         out_png: bool = False,
         is_training: bool = True,
+        is_testing: bool = False,
         prob: float = 1.0,
         count: int = 0,
         use_Cb: bool = True,
@@ -25,6 +26,7 @@ class GeoDockDataset(data.Dataset):
         self.out_pdb = out_pdb
         self.out_png = out_png
         self.is_training = is_training
+        self.is_testing = is_testing
         self.prob = prob
         self.count = count
         self.use_Cb = use_Cb
@@ -66,39 +68,49 @@ class GeoDockDataset(data.Dataset):
         
         elif dataset == 'dips_test':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/dips_test"
-            self.file_list = [i for i in os.listdir(self.data_dir)] 
-
-        elif dataset == 'db5_test_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_test_bound"
-            self.file_list = [i for i in os.listdir(self.data_dir)] 
+            self.file_list = [i[:-3] for i in os.listdir(self.data_dir)] 
 
         elif dataset == 'db5_train_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_train_bound"
-            self.file_list = [i for i in os.listdir(self.data_dir)] 
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/train_list.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_val_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_val_bound"
-            self.file_list = [i for i in os.listdir(self.data_dir)] 
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/val_list.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
 
-        elif dataset == 'db5_test_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_test_unbound"
-            self.file_list = [i for i in os.listdir(self.data_dir)] 
+        elif dataset == 'db5_test_bound':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/bound_list.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_train_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_train_unbound"
-            self.file_list = [i for i in os.listdir(self.data_dir)] 
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_unbound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/train_list.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_val_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_val_unbound"
-            self.file_list = [i for i in os.listdir(self.data_dir)] 
-
-        elif dataset == 'db5_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_bound"
-            self.file_list = [i for i in os.listdir(self.data_dir)] 
-
-        elif dataset == 'db5_unbound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_unbound"
-            self.file_list = [i for i in os.listdir(self.data_dir)] 
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/val_list.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
+        elif dataset == 'db5_test_unbound':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_unbound_flexible"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/unbound_list.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
 
 
     def __getitem__(self, idx: int):
@@ -110,7 +122,7 @@ class GeoDockDataset(data.Dataset):
             data = torch.load(os.path.join(self.data_dir, _id+'.pt'))
 
         else:
-            data = torch.load(os.path.join(self.data_dir, self.file_list[idx]))
+            data = torch.load(os.path.join(self.data_dir, self.file_list[idx]+'.pt'))
 
         # get from data
         _id = data.name
@@ -122,7 +134,7 @@ class GeoDockDataset(data.Dataset):
         protein2_embeddings = data['ligand'].x
 
         # crop > 500
-        if self.is_training:
+        if not self.is_testing:
             crop_size = 500
             if len(seq1) + len(seq2) > crop_size:
                 crop_size_per_chain = crop_size // 2
@@ -457,11 +469,11 @@ class GeoDockDataset(data.Dataset):
 
 if __name__ == '__main__':
     dataset = GeoDockDataset(
-        dataset='dips_val',
-        out_pdb=False,
+        dataset='db5_train_bound',
+        out_pdb=True,
         out_png=False,
-        is_training=True,
-        count=3,
+        is_training=False,
+        count=0,
     )
 
     dataset[0]
