@@ -105,8 +105,15 @@ class GeoDockDataset(data.Dataset):
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
-        elif dataset == 'db5_test_unbound':
+        elif dataset == 'db5_test_flexible_unbound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_unbound_flexible"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/unbound_list.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
+        elif dataset == 'db5_test_flexible_bound':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_bound_flexible"
             self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/unbound_list.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()

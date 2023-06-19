@@ -16,7 +16,13 @@ def compute_metrics(model, native):
     DockQ = get_DockQ(i_rmsd, l_rmsd, fnat)
     rec_bb_rmsd = get_bb_rmsd(model_rec, native_rec)
     lig_bb_rmsd = get_bb_rmsd(model_lig, native_lig)
-    return {'cRMS': c_rmsd, 'iRMS': i_rmsd, 'LRMS': l_rmsd, 'Fnat': fnat, 'DockQ': DockQ, 'Rec_BB_RMS': rec_bb_rmsd, 'Lig_BB_RMS': lig_bb_rmsd}
+
+    # get interface res
+    res1, res2 = get_interface_res(native_rec, native_lig, cutoff=10.0)
+    rec_bb_irmsd = get_bb_rmsd(model_rec[res1], native_rec[res1])
+    lig_bb_irmsd = get_bb_rmsd(model_lig[res2], native_lig[res2])
+
+    return {'cRMS': c_rmsd, 'iRMS': i_rmsd, 'LRMS': l_rmsd, 'Fnat': fnat, 'DockQ': DockQ, 'Rec_BB_RMS': rec_bb_rmsd, 'Lig_BB_RMS': lig_bb_rmsd, 'Rec_BB_iRMS': rec_bb_irmsd, 'Lig_BB_iRMS': lig_bb_irmsd}
     
 def get_interface_res(x1, x2, cutoff=10.0):
     # Calculate pairwise distances

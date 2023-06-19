@@ -17,8 +17,8 @@ class UnboundDataset(data.Dataset):
             self.native_partner_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/flexible_set/partners/native"
             self.file_list = [i[:6] for i in os.listdir(self.model_dir) if i[-3:] == 'pdb']
             self.file_list = sorted(self.file_list)
-        elif self.dataset == 'db5_test_unbound':
-            self.model_dir = "/home/lchu11/scr4_jgray21/lchu11/GeoDock/geodock/benchmark/db5_test_unbound"
+        elif self.dataset == 'db5_test_flexible_unbound':
+            self.model_dir = "/home/lchu11/scr4_jgray21/lchu11/GeoDock/geodock/benchmark/db5_test_flexible_unbound"
             self.unbound_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/AF_RepD2_set/flexible_targets/unbound" 
             self.bound_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/AF_RepD2_set/flexible_targets/bound"
             self.partner_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/AF_RepD2_set/flexible_targets/partners"
@@ -42,7 +42,7 @@ class UnboundDataset(data.Dataset):
                 native_partner1 = partner.split('_')[0]
                 native_partner2 = partner.split('_')[1]
 
-        elif self.dataset == 'db5_test_unbound':
+        elif self.dataset == 'db5_test_flexible_unbound':
             _id = self.file_list[idx]
             model_file = os.path.join(self.model_dir, _id+"_p.pdb")
             unbound_file = os.path.join(self.unbound_dir, _id+"_unbound.pdb")

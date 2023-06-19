@@ -44,6 +44,11 @@ class GeoDockDataset(data.Dataset):
             self.partner_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/AF_RepD2_set/flexible_targets/partners"
             self.file_list = [i[:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb']
 
+        elif dataset == 'db5_bound_flexible':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/AF_RepD2_set/flexible_targets/bound"
+            self.partner_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/AF_RepD2_set/flexible_targets/partners"
+            self.file_list = [i[:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb']
+
         elif dataset == 'abag_test':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/exp_aa/cleaned/"
             pdb_list = pd.read_csv("/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/exp_aa/pdb_list.csv")
@@ -95,6 +100,23 @@ class GeoDockDataset(data.Dataset):
             _id = self.file_list[idx] 
             print(_id)
             model_file = os.path.join(self.data_dir, _id+"_unbound.pdb")
+            partner_file = os.path.join(self.partner_dir, _id+"_partners") 
+
+            with open(partner_file, 'r') as f:
+                partner = f.readline().strip().split()[1]
+                model_partner1 = partner.split('_')[0]
+                model_partner2 = partner.split('_')[1]
+                
+            coords1, seq1 = load_coords(model_file, chain=[*model_partner1])
+            coords2, seq2 = load_coords(model_file, chain=[*model_partner2])
+
+            coords1 = torch.nan_to_num(torch.from_numpy(coords1))
+            coords2 = torch.nan_to_num(torch.from_numpy(coords2))
+
+        elif self.dataset == 'db5_bound_flexible':
+            _id = self.file_list[idx] 
+            print(_id)
+            model_file = os.path.join(self.data_dir, _id+"_bound.pdb")
             partner_file = os.path.join(self.partner_dir, _id+"_partners") 
 
             with open(partner_file, 'r') as f:
@@ -189,7 +211,7 @@ class GeoDockDataset(data.Dataset):
 
 
 if __name__ == '__main__':
-    name = 'db5_unbound_flexible'
+    name = 'db5_bound_flexible'
     save_dir = '/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/'+name 
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
