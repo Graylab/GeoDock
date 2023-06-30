@@ -24,6 +24,11 @@ class RepD2Dataset(data.Dataset):
             self.native_partner_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/flexible_set/partners/native"
             self.file_list = [i[:4] for i in os.listdir(self.model_dir) if i[-3:] == 'pdb']
             self.file_list = sorted(self.file_list)
+        elif self.dataset == 'RepD2_bound':
+            self.model_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/equidock_set/top1" 
+            self.native_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/For_Ameya"
+            self.model_partner_dir = "/home/lchu11/scr4_jgray21/lchu11/ReplicaDock2/equidock_set/partners"
+            self.file_list = [i[:4] for i in os.listdir(self.model_dir) if i[-3:] == 'pdb']
 
     def __getitem__(self, idx: int):
         if self.dataset == 'RepD2':
@@ -70,6 +75,27 @@ class RepD2Dataset(data.Dataset):
             native_coords1 = torch.nan_to_num(torch.from_numpy(native_coords1))
             native_coords2 = torch.nan_to_num(torch.from_numpy(native_coords2))
 
+        elif self.dataset == 'RepD2_bound':
+            _id = self.file_list[idx] 
+            model_file = os.path.join(self.model_dir, _id+".pdb")
+            native_file_1 = os.path.join(self.native_dir, _id[:4]+"_r_b.pdb")
+            native_file_2 = os.path.join(self.native_dir, _id[:4]+"_l_b.pdb")
+            model_partner_file = os.path.join(self.model_partner_dir, _id[:4]+"_partners") 
+
+            with open(model_partner_file, 'r') as f:
+                partner = f.readline().strip().split()[1]
+                model_partner1 = partner.split('_')[0]
+                model_partner2 = partner.split('_')[1]
+
+            model_coords1, model_seq1 = load_coords(model_file, chain=[*model_partner1])
+            model_coords2, model_seq2 = load_coords(model_file, chain=[*model_partner2])
+            native_coords1, native_seq1 = load_coords(native_file_1, chain=[*model_partner1])
+            native_coords2, native_seq2 = load_coords(native_file_2, chain=[*model_partner1])
+
+            model_coords1 = torch.nan_to_num(torch.from_numpy(model_coords1))
+            model_coords2 = torch.nan_to_num(torch.from_numpy(model_coords2))
+            native_coords1 = torch.nan_to_num(torch.from_numpy(native_coords1))
+            native_coords2 = torch.nan_to_num(torch.from_numpy(native_coords2))
 
             # Output
             output = {
@@ -88,7 +114,8 @@ class RepD2Dataset(data.Dataset):
 
 if __name__ == '__main__':
     dataset = RepD2Dataset(
-        dataset='RepD2_global'
+        dataset='RepD2_bound'
     )
 
-    dataset[0]
+    for batch in dataset:
+        pass
