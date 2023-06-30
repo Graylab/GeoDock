@@ -1,9 +1,4 @@
 biotite==0.37.0
 einops==0.6.1
 fair-esm==2.0.0
-fvcore==0.1.5.post20221221
--e git+ssh://git@github.com/Graylab/GeoDock.git@c113fa589e369e8e6a05a0d5b101951d187faa3a#egg=GeoDock
 pytorch-lightning==2.0.2
-pytorch3d==0.7.4
-torch-geometric==2.3.1
-torch-scatter==2.1.1
