@@ -2,7 +2,6 @@ import os
 import torch
 import random
 import torch.nn.functional as F
-import matplotlib.pyplot as plt
 from torch.utils import data
 from tqdm import tqdm
 from einops import repeat
@@ -401,6 +400,7 @@ class GeoDockDataset(data.Dataset):
         
         # test
         if self.out_png:
+            import matplotlib.pyplot as plt
             fig, ax = plt.subplots(nrows=2, ncols=2)
             ax[0, 0].imshow(dist_bin.numpy(), cmap='hot', interpolation='nearest')
             ax[0, 1].imshow(omega_bin.numpy(), cmap='hot', interpolation='nearest')

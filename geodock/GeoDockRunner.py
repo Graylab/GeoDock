@@ -62,7 +62,6 @@ class GeoDockRunner():
         )
 
         # Start docking
-        start_time = time()
         dock(
             out_name,
             seq1,
@@ -71,13 +70,11 @@ class GeoDockRunner():
             self.model,
         )
 
-        print(f"Completed docking in {time() - start_time:.2f} seconds.")
-
 
 if __name__ == '__main__':
-    ckpt_file = "weights/best.ckpt"
-    partner1 = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a95.pdb1_3.dill_r_b_COMPLEX.pdb"
-    partner2 = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/equidock/a9_1a95.pdb1_3.dill_l_b_COMPLEX.pdb"
+    ckpt_file = "weights/dips.ckpt"
+    partner1 = "./data/test/a9_1a95.pdb1_3.dill_r_b_COMPLEX.pdb"
+    partner2 = "./data/test/a9_1a95.pdb1_3.dill_l_b_COMPLEX.pdb"
     out_name = "test"
 
     # Record the initial memory usage

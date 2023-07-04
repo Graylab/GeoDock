@@ -1,4 +1,6 @@
 import torch
+import numpy as np
+from typing import List, Optional, Union
 
 
 _aa_1_3_dict = {
@@ -26,6 +28,9 @@ _aa_1_3_dict = {
     'X': 'URI',
 }
 
+
+def exists(x):
+    return x is not None
 
 
 def place_fourth_atom(a_coord: torch.Tensor, b_coord: torch.Tensor,
@@ -84,3 +89,51 @@ def save_PDB(out_pdb: str,
         f.close()
 
 
+def save_PDB_string(
+    out_pdb: str,
+    coords: torch.Tensor,
+    seq: str,
+    chains: List[str] = None,
+    error: torch.Tensor = None,
+    delims: Union[int, List[int]] = None,
+    atoms=['N', 'CA', 'C', 'O', 'CB'],
+    write_pdb=True,
+) -> None:
+    """
+    Write set of N, CA, C, O, CB coords to PDB file
+    """
+
+    if not exists(chains):
+        chains = ["A", "B"]
+
+    if type(delims) == type(None):
+        delims = -1
+    elif type(delims) == int:
+        delims = [delims]
+
+    if not exists(error):
+        error = torch.zeros(len(seq))
+
+    pdb_string = ""
+    k = 0
+    for r, residue in enumerate(coords):
+        AA = _aa_1_3_dict[seq[r]]
+        for a, atom in enumerate(residue):
+            if AA == "GLY" and atoms[a] == "CB": continue
+            x, y, z = atom
+            chain_id = chains[np.where(np.array(delims) - r > 0)[0][0]]
+            pdb_string += "ATOM  %5d  %-2s  %3s %s%4d    %8.3f%8.3f%8.3f  %4.2f  %4.2f\n" % (
+                k + 1, atoms[a], AA, chain_id, r + 1, x, y, z, 1, error[r])
+            k += 1
+
+            if k in delims:
+                pdb_string += "TER  %5d      %3s %s%4d\n" % (
+                    k + 1, AA, chain_id, r + 1)
+                
+    pdb_string += "END\n"
+
+    if write_pdb:
+        with open(out_pdb, "w") as f:
+            f.write(pdb_string)
+
+    return pdb_string
