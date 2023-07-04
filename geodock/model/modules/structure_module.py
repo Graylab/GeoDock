@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from einops.layers.torch import Rearrange
 from einops import rearrange, repeat
 from torch import einsum
-from pytorch3d.transforms import quaternion_to_matrix
+from geodock.utils.transforms import quaternion_to_matrix
 
 
 # Helpers

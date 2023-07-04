@@ -7,10 +7,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import random
 from einops import repeat, rearrange
-from pytorch3d.transforms import matrix_to_quaternion
 from geodock.model.modules.structure_module import StructureModule
 from geodock.model.modules.graph_module import GraphModule 
 from geodock.utils.coords6d import get_coords6d
+from geodock.utils.transforms import quaternion_to_matrix
 
 
 class IterativeTransformer(nn.Module):
