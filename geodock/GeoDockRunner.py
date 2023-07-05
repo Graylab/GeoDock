@@ -46,7 +46,14 @@ class GeoDockRunner():
 
         return embeddings
     
-    def dock(self, partner1, partner2, out_name):
+    def dock(
+        self, 
+        partner1, 
+        partner2, 
+        out_name,
+        do_refine=True,
+        use_openmm=True,
+    ):
         # Get seqs and coords
         coords1, seq1 = load_coords(partner1, chain=None)
         coords2, seq2 = load_coords(partner2, chain=None)
@@ -68,6 +75,8 @@ class GeoDockRunner():
             seq2,
             model_in,
             self.model,
+            do_refine=do_refine,
+            use_openmm=use_openmm,
         )
 
 
@@ -77,21 +86,11 @@ if __name__ == '__main__':
     partner2 = "./data/test/a9_1a95.pdb1_3.dill_l_b_COMPLEX.pdb"
     out_name = "test"
 
-    # Record the initial memory usage
-    torch.cuda.reset_peak_memory_stats()
-
-    # Perform your computations
-
-
     geodock = GeoDockRunner(ckpt_file=ckpt_file)
     pred = geodock.dock(
         partner1=partner1, 
         partner2=partner2,
         out_name=out_name,
+        do_refine=True,
+        use_openmm=True,
     )
-
-    # Check the peak memory usage
-    peak_memory_bytes = torch.cuda.max_memory_allocated()
-    peak_memory_mb = peak_memory_bytes / 1024 / 1024  # Convert to megabytes
-
-    print(f"Peak memory usage: {peak_memory_mb:.2f} MB")

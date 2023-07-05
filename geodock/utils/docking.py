@@ -64,8 +64,8 @@ def dock(
     #-----Docking end-----#
 
     #-----Refine start-----#
-    start_time = time()
     if do_refine:
+        start_time = time()
         if use_openmm:
             try:
                 from geodock.refine.openmm_ref import refine
@@ -79,8 +79,8 @@ def dock(
             except:
                 exit("PyRosetta not installed. Please install PyRosetta to use refinement.")
 
-    refine(*refine_input)
-    print(f"Completed refining in {time() - start_time:.2f} seconds.")
+        refine(*refine_input)
+        print(f"Completed refining in {time() - start_time:.2f} seconds.")
     #-----Refine end-----#
 
 def get_full_coords(coords):
