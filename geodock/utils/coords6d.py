@@ -1,8 +1,9 @@
-import torch
+###
+# Modified from https://github.com/RosettaCommons/trRosetta2/blob/main/trRosetta/coords6d.py
+###
+
 import math
-import numpy as np
-import scipy
-import scipy.spatial
+import torch
 from einops import repeat
 
 
