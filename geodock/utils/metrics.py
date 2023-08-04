@@ -38,6 +38,16 @@ def get_interface_res(x1, x2, cutoff=10.0):
     res2 = torch.unique(index[1])
     return res1, res2
 
+def get_dist(x1, x2, cutoff=5.0):
+    # Calculate pairwise distances
+    dist = x1[..., None, :, None, :] - x2[..., None, :, None, :, :]
+    dist = (dist ** 2).sum(dim=-1).sqrt().flatten(start_dim=-2)
+
+    # Find minimum distance between each pair of residues
+    min_dist, _ = torch.min(dist, dim=-1)
+
+    return min_dist
+
 def get_c_rmsd(model_rec, model_lig, native_rec, native_lig):
     pred = torch.cat([model_rec, model_lig], dim=0).flatten(end_dim=1)
     label = torch.cat([native_rec, native_lig], dim=0).flatten(end_dim=1)
@@ -69,12 +79,19 @@ def get_bb_rmsd(model, native):
     pred = (R.mm(pred.T)).T + t
     return get_rmsd(pred, label).item()
 
-def get_fnat(model_rec, model_lig, native_rec, native_lig):
-    native_res1, native_res2 = get_interface_res(native_rec, native_lig, cutoff=6.0)
-    model_res1, model_res2 = get_interface_res(model_rec, model_lig, cutoff=6.0)
-    overlap = len(set(native_res1.tolist()) & set(model_res1.tolist())) + len(set(native_res2.tolist()) & set(model_res2.tolist()))
-    universe = len(set(native_res1.tolist()) | set(model_res1.tolist())) + len(set(native_res2.tolist()) | set(model_res2.tolist()))
-    return float(overlap / (universe + 1e-6))
+def get_fnat(model_rec, model_lig, native_rec, native_lig, cutoff=6.0):
+    ligand_receptor_distance = get_dist(native_rec, native_lig)
+    positive_tuple = torch.where(ligand_receptor_distance < cutoff)
+    active_receptor = positive_tuple[0]
+    active_ligand = positive_tuple[1]
+    assert len(active_ligand) == len(active_receptor)
+    ligand_receptor_distance_pred = get_dist(model_rec, model_lig)
+    selected_elements = ligand_receptor_distance_pred[active_receptor, active_ligand]
+    count = torch.count_nonzero(selected_elements < cutoff)
+    Fnat = round(count.item() / (len(active_ligand) + 1e-6), 6)
+    return Fnat
+
+
 
 def get_DockQ(i_rmsd, l_rmsd, fnat):
     i_rmsd_scaled = 1.0 / (1.0 + (i_rmsd/1.5)**2)
