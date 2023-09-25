@@ -97,14 +97,14 @@ class RepD2Dataset(data.Dataset):
             native_coords1 = torch.nan_to_num(torch.from_numpy(native_coords1))
             native_coords2 = torch.nan_to_num(torch.from_numpy(native_coords2))
 
-            # Output
-            output = {
-                'id': _id[:4],
-                'model_coords1': model_coords1, 
-                'model_coords2': model_coords2, 
-                'native_coords1': native_coords1,
-                'native_coords2': native_coords2,
-            }
+        # Output
+        output = {
+            'id': _id[:4],
+            'model_coords1': model_coords1, 
+            'model_coords2': model_coords2, 
+            'native_coords1': native_coords1,
+            'native_coords2': native_coords2,
+        }
         
         return {key: value for key, value in output.items()}
 
@@ -114,8 +114,7 @@ class RepD2Dataset(data.Dataset):
 
 if __name__ == '__main__':
     dataset = RepD2Dataset(
-        dataset='RepD2_bound'
+        dataset='RepD2_global'
     )
+    dataset[0]
 
-    for batch in dataset:
-        pass

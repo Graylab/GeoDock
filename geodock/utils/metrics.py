@@ -38,7 +38,7 @@ def get_interface_res(x1, x2, cutoff=10.0):
     res2 = torch.unique(index[1])
     return res1, res2
 
-def get_dist(x1, x2, cutoff=5.0):
+def get_dist(x1, x2):
     # Calculate pairwise distances
     dist = x1[..., None, :, None, :] - x2[..., None, :, None, :, :]
     dist = (dist ** 2).sum(dim=-1).sqrt().flatten(start_dim=-2)

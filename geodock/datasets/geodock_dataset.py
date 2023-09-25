@@ -31,89 +31,89 @@ class GeoDockDataset(data.Dataset):
         self.use_Cb = use_Cb
 
         if dataset == 'dips_train':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips/pt_files"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/train_list_lt_50.txt" 
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips/pt_files"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips_equidock/train_list_lt_50.txt" 
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         if dataset == 'dips_val':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips/pt_files"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/val_list_lt_50.txt" 
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips/pt_files"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips_equidock/val_list_lt_50.txt" 
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         if dataset == 'dips_train_500':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips/pt_files"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/train_list_500.txt" 
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips/pt_files"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips_equidock/train_list_500.txt" 
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         if dataset == 'dips_val_500':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips/pt_files"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/val_list_500.txt" 
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips/pt_files"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips_equidock/val_list_500.txt" 
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         if dataset == 'dips_test_500':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips/pt_files"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/dips_equidock/test_list_500.txt" 
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips/pt_files"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips_equidock/test_list_500.txt" 
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
         
         elif dataset == 'dips_test':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/dips_test"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/pts/dips_test"
             self.file_list = [i[:-3] for i in os.listdir(self.data_dir)] 
 
         elif dataset == 'db5_train_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_bound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/train_list.txt"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/pts/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/train_list.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_val_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_bound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/val_list.txt"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/pts/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/val_list.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_test_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_bound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/bound_list.txt"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/pts/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/bound_list.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_train_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_unbound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/train_list.txt"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/pts/db5_unbound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/train_list.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_val_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_unbound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/val_list.txt"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/pts/db5_unbound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/val_list.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_test_flexible_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_unbound_flexible"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/flexible_list.txt"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/pts/db5_unbound_flexible"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/flexible_list.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_test_flexible_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/db5_bound_flexible"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/unbound_list.txt"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/pts/db5_bound_flexible"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/unbound_list.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 

@@ -1,0 +1,7 @@
+node_dim: 64
+edge_dim: 64
+gm_depth: 1
+sm_depth: 1
+num_iter: 1
+lr: 0.0001
+weight_decay: 0.0
