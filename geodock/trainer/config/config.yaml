@@ -27,6 +27,9 @@ work_dir: ${hydra:runtime.cwd}
 # path to folder with data
 data_dir: ${work_dir}/data
 
+# path to ckpt
+ckpt_path: null
+
 # pretty print config at the start of the run using Rich library
 print_config: True
 

@@ -71,7 +71,7 @@ def train(config: DictConfig) -> Optional[float]:
 
     # Train the model
     log.info("Starting training!")
-    trainer.fit(model=model, datamodule=datamodule)
+    trainer.fit(model=model, datamodule=datamodule, ckpt_path=config.ckpt_path)
 
     # Get metric score for hyperparameter optimization
     score = trainer.callback_metrics.get(config.get("optimized_metric"))

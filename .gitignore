@@ -169,3 +169,4 @@ benchmark/
 deploy_keys/
 *.csv
 *.pdb
+last.ckpt

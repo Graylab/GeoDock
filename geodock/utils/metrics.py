@@ -55,8 +55,8 @@ def get_c_rmsd(model_rec, model_lig, native_rec, native_lig):
     pred = (R.mm(pred.T)).T + t
     return get_rmsd(pred, label).item()
 
-def get_i_rmsd(model_rec, model_lig, native_rec, native_lig):
-    res1, res2 = get_interface_res(native_rec, native_lig, cutoff=10.0)
+def get_i_rmsd(model_rec, model_lig, native_rec, native_lig, cutoff=10.0):
+    res1, res2 = get_interface_res(native_rec, native_lig, cutoff=cutoff)
     pred = torch.cat([model_rec[res1], model_lig[res2]], dim=0).flatten(end_dim=1)
     label = torch.cat([native_rec[res1], native_lig[res2]], dim=0).flatten(end_dim=1)
     R, t = find_rigid_alignment(pred, label)
@@ -90,8 +90,6 @@ def get_fnat(model_rec, model_lig, native_rec, native_lig, cutoff=6.0):
     count = torch.count_nonzero(selected_elements < cutoff)
     Fnat = round(count.item() / (len(active_ligand) + 1e-6), 6)
     return Fnat
-
-
 
 def get_DockQ(i_rmsd, l_rmsd, fnat):
     i_rmsd_scaled = 1.0 / (1.0 + (i_rmsd/1.5)**2)
