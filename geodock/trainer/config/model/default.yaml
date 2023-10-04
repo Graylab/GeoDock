@@ -1,12 +1,9 @@
-_target_: rigid_docking.models.docking.Docking
+_target_: geodock.model.GeoDock.GeoDock
 
 node_dim: 256
 edge_dim: 128
-inner_dim: 128
-depth: 4
+gm_depth: 3
+sm_depth: 3
+num_iter: 4
 lr: 5e-5
 weight_decay: 0.0
-dropout: 0.0
-sigma_min: 0.1
-sigma_max: 30.0
-model_type: energy
