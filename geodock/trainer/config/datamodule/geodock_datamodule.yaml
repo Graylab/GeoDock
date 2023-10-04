@@ -1,7 +1,7 @@
 _target_: geodock.datasets.geodock_datamodule.GeoDockDataModule
 
-train_set: dips_train_clean
-val_set: dips_val_clean
+train_set: dips_train_0.3
+val_set: dips_val_0.3
 test_set: dips_test
 batch_size: 1
 num_workers: 6

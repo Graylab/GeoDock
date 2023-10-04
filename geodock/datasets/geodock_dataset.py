@@ -30,6 +30,19 @@ class GeoDockDataset(data.Dataset):
         self.count = count
         self.use_Cb = use_Cb
 
+        if dataset == 'dips_train_0.3':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips/pt_files"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips_equidock/train_list_0.3.txt" 
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
+        if dataset == 'dips_val_0.3':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips/pt_files"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips_equidock/val_list_0.3.txt" 
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
         if dataset == 'dips_train_clean':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips/pt_files"
             self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/dips_equidock/train_list_lt_50_clean.txt" 
@@ -134,7 +147,7 @@ class GeoDockDataset(data.Dataset):
 
 
     def __getitem__(self, idx: int):
-        if self.dataset == 'dips_train_clean' or self.dataset == 'dips_val_clean' or self.dataset == 'dips_train_500' or self.dataset == 'dips_val_500' or self.dataset == 'dips_test_500':
+        if self.dataset[:4] == 'dips':
             # Get info from file_list 
             _id = self.file_list[idx]
             split_string = _id.split('/')
