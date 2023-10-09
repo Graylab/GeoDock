@@ -81,7 +81,7 @@ class GeoDockRunner():
 
 
 if __name__ == '__main__':
-    ckpt_file = "weights/dips.ckpt"
+    ckpt_file = "weights/dips_0.3.ckpt"
     partner1 = "./data/test/a9_1a95.pdb1_3.dill_r_b_COMPLEX.pdb"
     partner2 = "./data/test/a9_1a95.pdb1_3.dill_l_b_COMPLEX.pdb"
     out_name = "test"
