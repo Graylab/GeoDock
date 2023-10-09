@@ -85,9 +85,6 @@ class GeoDock(pl.LightningModule):
         protein2_embeddings = batch['protein2_embeddings']
         pair_embeddings = batch['pair_embeddings']
         positional_embeddings = batch['positional_embeddings']
-        label_rotat = batch['label_rotat']
-        label_trans = batch['label_trans']
-        label_coords = batch['label_coords']
 
         # Prepare GeoDock input
         input = GeoDockInput(
