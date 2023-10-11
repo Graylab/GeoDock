@@ -2,8 +2,8 @@ _target_: geodock.model.GeoDock.GeoDock
 
 node_dim: 256
 edge_dim: 128
-gm_depth: 3
-sm_depth: 3
+gm_depth: 6
+sm_depth: 6
 num_iter: 4
 lr: 5e-5
 weight_decay: 0.0

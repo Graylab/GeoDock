@@ -98,7 +98,6 @@ class GeoDockDataset(data.Dataset):
 
         elif self.dataset == 'db5_unbound_flexible':
             _id = self.file_list[idx] 
-            print(_id)
             model_file = os.path.join(self.data_dir, _id+"_unbound.pdb")
             partner_file = os.path.join(self.partner_dir, _id+"_partners") 
 
@@ -115,7 +114,6 @@ class GeoDockDataset(data.Dataset):
 
         elif self.dataset == 'db5_bound_flexible':
             _id = self.file_list[idx] 
-            print(_id)
             model_file = os.path.join(self.data_dir, _id+"_bound.pdb")
             partner_file = os.path.join(self.partner_dir, _id+"_partners") 
 

@@ -164,10 +164,13 @@ cython_debug/
 *.json
 *.out
 *.sh
-geodock/trainer/logs/
-benchmark/
-deploy_keys/
 *.csv
 *.pdb
 last.ckpt
+notes.txt
 analysis/
+lightning_logs/
+config/
+geodock/trainer/logs/
+benchmark/
+deploy_keys/
