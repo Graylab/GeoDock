@@ -79,7 +79,7 @@ class GeoDock(pl.LightningModule):
 
         return output
 
-    def step(self, batch, batch_idx):
+    def step(self, batch, batch_idx, train=True):
         # Get info from the batch
         protein1_embeddings = batch['protein1_embeddings']
         protein2_embeddings = batch['protein2_embeddings']
@@ -105,12 +105,15 @@ class GeoDock(pl.LightningModule):
         lddt_loss = losses['lddt_loss']
         violation_loss = losses['violation_loss']
 
-        if self.current_epoch < 5:
-            loss = intra_loss + 0.3*dist_loss + 0.01*lddt_loss 
-        elif self.current_epoch < 10:
-            loss = intra_loss + inter_loss + 0.3*dist_loss + 0.01*lddt_loss
+        if train:
+            if self.current_epoch < 2:
+                loss = intra_loss + 0.3*dist_loss + 0.01*lddt_loss 
+            elif self.current_epoch < 10:
+                loss = intra_loss + inter_loss + 0.3*dist_loss + 0.01*lddt_loss
+            else:
+                loss = intra_loss + inter_loss + violation_loss + 0.3*dist_loss + 0.01*lddt_loss
         else:
-            loss = intra_loss + inter_loss + violation_loss + 0.3*dist_loss + 0.01*lddt_loss
+            loss = intra_loss + inter_loss + violation_loss + 0.3*dist_loss + 0.01*lddt_loss 
 
         losses.update({'loss': loss})
 
@@ -133,13 +136,14 @@ class GeoDock(pl.LightningModule):
                 )
 
     def training_step(self, batch, batch_idx):
-        losses = self.step(batch, batch_idx)
+        losses = self.step(batch, batch_idx, train=True)
         self._log(losses, train=True)
         
         return losses['loss']
 
     def validation_step(self, batch, batch_idx):
-        losses = self.step(batch, batch_idx)
+        batch['use_clamped'] = False
+        losses = self.step(batch, batch_idx, train=False)
         self._log(losses, train=False)
         
         return losses['loss']
@@ -163,5 +167,5 @@ if __name__ == '__main__':
     dataloader = data.DataLoader(subset, batch_size=1, num_workers=6)
     
     model = GeoDock()
-    trainer = pl.Trainer()
+    trainer = pl.Trainer(max_epochs=1)
     trainer.validate(model, dataloader)

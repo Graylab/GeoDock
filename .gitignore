@@ -174,3 +174,5 @@ config/
 geodock/trainer/logs/
 benchmark/
 deploy_keys/
+plots/
+inference/

@@ -55,7 +55,7 @@ def inter_fape_loss(
 
     if d_clamp is not None:
         loss = torch.clamp(loss, max=d_clamp)
-
+        
     mask = torch.zeros_like(loss, device=pred.device)
 
     mask[:, :sep, sep:, :] = 1.0 
@@ -144,12 +144,48 @@ def between_residue_bond_loss(
     loss = c_n_loss + ca_c_n_loss + c_n_ca_loss
     return loss
 
+def between_residue_clash_loss(
+    pred_coords: torch.Tensor,
+    overlap_tolerance_soft=1.5,
+    overlap_tolerance_hard=1.5,
+    eps=1e-10,
+) -> torch.Tensor:
+    """
+    """
+
+    b, n, *_ = pred_coords.shape
+
+    # Create the distance matrix.
+    # (N, N, 3, 3)
+    dists = torch.sqrt(
+        eps
+        + torch.sum(
+            (
+                pred_coords[..., :, None, :, None, :]
+                - pred_coords[..., None, :, None, :, :]
+            )
+            ** 2,
+            dim=-1,
+        )
+    )
+
+    # dists_mask
+    dists_mask = torch.tril(torch.ones((b, n, n), dtype=torch.bool, device=pred_coords.device))
+
+    print(dists.shape)
+    print(dists_mask.shape)
+
+
 def violation_loss(
     pred_coords: torch.Tensor, 
     sep: int,
 ) -> torch.Tensor:
     """
     """
+
+    # clash loss
+    #between_residue_clash_loss(pred_coords)
+
     pred_1 = pred_coords[:, :sep]
     pred_2 = pred_coords[:, sep:]
     loss_1 = between_residue_bond_loss(pred_1) 
@@ -326,6 +362,7 @@ class GeoDockLoss(nn.Module):
         label_rotat = batch['label_rotat']
         label_trans = batch['label_trans']
         sep = batch['protein1_embeddings'].size(1)
+        use_clamped = batch['use_clamped']
         pred_fape = get_fape(pred_coords, pred_rotat, pred_trans)
         label_fape = get_fape(label_coords, label_rotat, label_trans)
 
@@ -334,13 +371,13 @@ class GeoDockLoss(nn.Module):
                 pred=pred_fape,
                 label=label_fape,
                 sep=sep,
-                d_clamp=10.0,
+                d_clamp=10.0 if use_clamped else None,
             ),
             "inter_loss": lambda: inter_fape_loss(
                 pred=pred_fape,
                 label=label_fape,
                 sep=sep,
-                d_clamp=30.0,
+                d_clamp=30.0 if use_clamped else None,
             ),
             "dist_loss": lambda: distogram_loss(
                 logits=out.dist_logits,

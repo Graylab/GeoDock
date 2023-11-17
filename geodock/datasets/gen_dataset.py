@@ -6,7 +6,6 @@ import torch
 import random
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import torch.nn.functional as F
 from tqdm import tqdm
 from torch.utils import data
@@ -30,12 +29,12 @@ class GeoDockDataset(data.Dataset):
             self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
 
         elif dataset == 'db5_bound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/structures"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/db5/structures"
             self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
             self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
 
         elif dataset == 'db5_unbound':
-            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/db5.5/structures"
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/db5/structures"
             self.file_list = [i[0:4] for i in os.listdir(self.data_dir) if i[-3:] == 'pdb'] 
             self.file_list = list(dict.fromkeys(self.file_list)) # remove duplicates
         
@@ -209,8 +208,8 @@ class GeoDockDataset(data.Dataset):
 
 
 if __name__ == '__main__':
-    name = 'db5_unbound_flexible'
-    save_dir = '/home/lchu11/scr4_jgray21/lchu11/Docking-dev/data/pts/'+name 
+    name = 'db5_bound'
+    save_dir = '/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_bound_new'
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
         print(f"Created directory: {save_dir}")

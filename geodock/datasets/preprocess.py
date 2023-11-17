@@ -38,18 +38,18 @@ f = open('id_list.txt', 'w')
 
 for index, row in tqdm(df.iterrows()):
     pdb_file = path.join(data_dir, row['case']+'.nat.chn.pdb')
-    _id = row['id']
+    _id = row['case']
 
     n = len(row['receptor'] + row['ligand'])
     if n == 2:
-        chain1 = ['B']
-        chain2 = ['A']
+        chain1 = ['A']
+        chain2 = ['B']
     elif n == 3:
-        chain1 = ['B', 'C']
-        chain2 = ['A']
+        chain1 = ['A', 'B']
+        chain2 = ['C']
     elif n == 4:
-        chain1 = ['C', 'D']
-        chain2 = ['A', 'B']
+        chain1 = ['A', 'B']
+        chain2 = ['C', 'D']
 
     # get info from pdb
     coords1, seq1 = load_coords(pdb_file, chain1)

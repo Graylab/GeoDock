@@ -44,6 +44,20 @@ class GeoDockDataset(data.Dataset):
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
+        elif dataset == 'dips_train_0.3_rep':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/dips_bb"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/dips/data_list/geodock/train_0.3_rep.txt" 
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
+        elif dataset == 'dips_val_0.3_rep':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/dips_bb"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/dips/data_list/geodock/val_0.3_rep.txt" 
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
         elif dataset == 'dips_train_0.3':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/dips_bb"
             self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/dips/data_list/geodock/train_0.3.txt" 
@@ -71,7 +85,7 @@ class GeoDockDataset(data.Dataset):
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
-        
+
         elif dataset == 'dips_test':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/dips_test"
             self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/dips/data_list/geodock/test.txt" 
@@ -81,42 +95,70 @@ class GeoDockDataset(data.Dataset):
 
         elif dataset == 'db5_train_bound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_bound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/train_list.txt"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/train_bound.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
+        elif dataset == 'db5_train_bound_0.3':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/train_bound_0.3.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
+        elif dataset == 'db5_train_bound_0.4':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/train_bound_0.4.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_val_bound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_bound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/val_list.txt"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/val_bound.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
+        elif dataset == 'db5_val_bound_0.3':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/val_bound_0.3.txt"
+            with open(self.data_list, 'r') as f:
+                lines = f.readlines()
+            self.file_list = [line.strip() for line in lines] 
+
+        elif dataset == 'db5_val_bound_0.4':
+            self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_bound"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/val_bound_0.4.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_test_bound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_bound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/bound_list.txt"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/test_bound.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_train_unbound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_unbound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/train_list.txt"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/train_unbound.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_val_unbound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_unbound"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/val_list.txt"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/val_unbound.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
 
         elif dataset == 'db5_test_unbound':
             self.data_dir = "/home/lchu11/scr4_jgray21/lchu11/data/pt/db5_unbound_flexible"
-            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/my_repos/Docking-dev/data/db5.5/flexible_list.txt"
+            self.data_list = "/home/lchu11/scr4_jgray21/lchu11/data/db5/test_unbound.txt"
             with open(self.data_list, 'r') as f:
                 lines = f.readlines()
             self.file_list = [line.strip() for line in lines] 
@@ -221,6 +263,14 @@ class GeoDockDataset(data.Dataset):
         # Pair positional embedding
         positional_embeddings = self.get_pair_relpos(len(seq1), len(seq2))
 
+        # use clamped
+        if self.is_training:
+            p = random.random()
+            use_clamped = p < 0.9
+        else:
+            use_clamped = False
+
+
         try:
             assert positional_embeddings.size(0) == pair_embeddings.size(0)
             assert positional_embeddings.size(1) == pair_embeddings.size(1)
@@ -250,6 +300,7 @@ class GeoDockDataset(data.Dataset):
             'label_rotat': label_rotat,
             'label_trans': label_trans,
             'label_coords': label_coords,
+            'use_clamped': use_clamped,
         }
         
         return {key: value for key, value in output.items()}
