@@ -27,7 +27,7 @@ numpy @ file:///home/conda/feedstock_root/build_artifacts/numpy_1687056313536/wo
 OpenMM==7.7.0
 packaging==23.1
 pdbfixer @ file:///home/conda/feedstock_root/build_artifacts/pdbfixer_1631833746479/work
-Pillow==9.3.0
+Pillow==10.2.0
 protobuf==4.23.3
 psutil==5.9.5
 pyg-lib==0.2.0+pt20cu118
