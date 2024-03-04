@@ -14,6 +14,7 @@ def dock(
     model,
     do_refine=True,
     use_openmm=True,
+    verbose:bool=False,
 ):
     #-----Docking Start-----#
     start_time = time()
@@ -48,9 +49,11 @@ def dock(
 
     if os.path.exists(out_pdb):
         os.remove(out_pdb)
-        print(f"File '{out_pdb}' deleted successfully.")
+        if verbose:
+            print(f"File '{out_pdb}' deleted successfully.")
     else:
-        print(f"File '{out_pdb}' does not exist.") 
+        if verbose:
+            print(f"File '{out_pdb}' does not exist.") 
         
     pdb_string = save_PDB_string(
         out_pdb=out_pdb, 
@@ -60,7 +63,8 @@ def dock(
         chains=chains,
         delims=delims
     )
-    print(f"Completed docking in {time() - start_time:.2f} seconds.")
+    if verbose:
+        print(f"Completed docking in {time() - start_time:.2f} seconds.")
     #-----Docking end-----#
 
     #-----Refine start-----#
