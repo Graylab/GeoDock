@@ -11,10 +11,12 @@ class GeoDockRunner():
     """
     Wrapper for GeoDock model predictions.
     """
-    def __init__(self, ckpt_file):
+    def __init__(self, ckpt_file, verbose:bool=False):
 
         # Check if gpu is available
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        self.verbose = verbose
 
         # Load ESM-2 model
         self.esm_model, alphabet = esm.pretrained.esm2_t33_650M_UR50D()
@@ -42,7 +44,8 @@ class GeoDockRunner():
             self.device,
         )
 
-        print(f"Completed embedding in {time() - start_time:.2f} seconds.")
+        if self.verbose:
+            print(f"Completed embedding in {time() - start_time:.2f} seconds.")
 
         return embeddings
     
